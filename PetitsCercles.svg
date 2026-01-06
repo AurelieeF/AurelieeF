@@ -73,6 +73,32 @@
     </circle>
   </g>
 
+  <!--Lemme add more circle just so it could reach the whole band-->
+  <!-- Circle 7 -->
+<circle cx="920" cy="120" r="16">
+  <animate attributeName="cy" values="120;78;120" dur="1.2s" begin="0.9s" repeatCount="indefinite" />
+  <animate attributeName="fill" values="#22C55E;#8B5CF6;#0EA5E9;#22C55E" dur="2.4s" begin="1.1s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Circle 8 -->
+<circle cx="1040" cy="120" r="16">
+  <animate attributeName="cy" values="120;66;120" dur="1.2s" begin="1.05s" repeatCount="indefinite" />
+  <animate attributeName="fill" values="#0EA5E9;#22C55E;#8B5CF6;#0EA5E9" dur="2.4s" begin="1.25s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Circle 9 -->
+<circle cx="1160" cy="120" r="16">
+  <animate attributeName="cy" values="120;88;120" dur="1.2s" begin="1.2s" repeatCount="indefinite" />
+  <animate attributeName="fill" values="#8B5CF6;#0EA5E9;#22C55E;#8B5CF6" dur="2.4s" begin="1.4s" repeatCount="indefinite"/>
+</circle>
+
+<!-- Circle 10 (smaller) -->
+<circle cx="110" cy="120" r="12">
+  <animate attributeName="cy" values="120;74;120" dur="1.2s" begin="0.35s" repeatCount="indefinite" />
+  <animate attributeName="fill" values="#22C55E;#0EA5E9;#8B5CF6;#22C55E" dur="2.4s" begin="0.5s" repeatCount="indefinite"/>
+</circle>
+
+
   <!-- Optional title text (remove if you want pure animation) -->
   <text x="50%" y="48" text-anchor="middle"
         font-family="Fira Code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
