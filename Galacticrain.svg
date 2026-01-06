@@ -2,11 +2,12 @@
 <svg width="1200" height="220" viewBox="0 0 1200 220"
      xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
-     role="img" aria-label="Galactic rain">
+     role="img" aria-label="Galactic rain (transparent)">
 
   <defs>
+    <!-- lil glow -->
     <filter id="sparkGlow">
-      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feGaussianBlur stdDeviation="2.8" result="b"/>
       <feMerge>
         <feMergeNode in="b"/>
         <feMergeNode in="SourceGraphic"/>
@@ -15,11 +16,11 @@
 
     <!-- ball + tail -->
     <g id="p" filter="url(#sparkGlow)">
-      <circle cx="0" cy="0" r="4" opacity="0.95"/>
-      <rect x="-1.5" y="-22" width="3" height="14" rx="1.5" opacity="0.45"/>
+      <circle cx="0" cy="0" r="3.6" opacity="0.95"/>
+      <rect x="-1.4" y="-20" width="2.8" height="12" rx="1.4" opacity="0.42"/>
     </g>
 
-    <!-- white spark -->
+    <!-- white spark (cute cross) -->
     <g id="ws">
       <rect x="-0.8" y="-6" width="1.6" height="12" rx="0.8"/>
       <rect x="-6" y="-0.8" width="12" height="1.6" rx="0.8"/>
@@ -28,68 +29,97 @@
     </g>
   </defs>
 
-  <!-- DEBUG BG so you can actually see it in preview -->
-  <rect width="1200" height="220" fill="#0b1020"/>
+  <!-- ✅ no background: fully transparent -->
 
-  <!-- haze -->
-  <g opacity="0.35">
-    <circle cx="260" cy="70" r="120" fill="#8B5CF6" opacity="0.22"/>
-    <circle cx="900" cy="120" r="160" fill="#0EA5E9" opacity="0.18"/>
-    <circle cx="650" cy="90" r="140" fill="#22C55E" opacity="0.12"/>
-  </g>
-
-  <!-- falling particles, juste des petits ronds -->
+  <!-- falling particles -->
   <g>
-    <g>
-      <use xlink:href="#p" fill="#0EA5E9"/>
-      <animateTransform attributeName="transform" type="translate"
-        values="80 -20; 60 250" dur="2.4s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;0.2" dur="2.4s" repeatCount="indefinite"/>
+    <g><use xlink:href="#p" fill="#0EA5E9"/>
+      <animateTransform attributeName="transform" type="translate" values="70 -30; 50 250" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.15" dur="2.4s" repeatCount="indefinite"/>
     </g>
 
-    <g>
-      <use xlink:href="#p" fill="#8B5CF6"/>
-      <animateTransform attributeName="transform" type="translate"
-        values="220 -40; 240 250" dur="3.0s" begin="0.2s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;0.25" dur="3.0s" begin="0.2s" repeatCount="indefinite"/>
+    <g><use xlink:href="#p" fill="#8B5CF6"/>
+      <animateTransform attributeName="transform" type="translate" values="160 -40; 175 250" dur="3.1s" begin="0.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.2" dur="3.1s" begin="0.2s" repeatCount="indefinite"/>
     </g>
 
-    <g>
-      <use xlink:href="#p" fill="#22C55E"/>
-      <animateTransform attributeName="transform" type="translate"
-        values="420 -30; 400 250" dur="2.6s" begin="0.5s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;0.15" dur="2.6s" begin="0.5s" repeatCount="indefinite"/>
+    <g><use xlink:href="#p" fill="#22C55E"/>
+      <animateTransform attributeName="transform" type="translate" values="240 -35; 220 250" dur="2.7s" begin="0.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.12" dur="2.7s" begin="0.5s" repeatCount="indefinite"/>
     </g>
 
-    <g>
-      <use xlink:href="#p" fill="#FF2E63"/>
-      <animateTransform attributeName="transform" type="translate"
-        values="650 -25; 680 250" dur="3.3s" begin="0.1s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;0.2" dur="3.3s" begin="0.1s" repeatCount="indefinite"/>
+    <g><use xlink:href="#p" fill="#FF2E63"/>
+      <animateTransform attributeName="transform" type="translate" values="320 -30; 350 250" dur="3.4s" begin="0.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.16" dur="3.4s" begin="0.1s" repeatCount="indefinite"/>
     </g>
 
-    <g>
-      <use xlink:href="#p" fill="#0EA5E9"/>
-      <animateTransform attributeName="transform" type="translate"
-        values="930 -35; 910 250" dur="2.8s" begin="0.35s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;0.2" dur="2.8s" begin="0.35s" repeatCount="indefinite"/>
+    <g><use xlink:href="#p" fill="#0EA5E9"/>
+      <animateTransform attributeName="transform" type="translate" values="410 -45; 395 250" dur="2.9s" begin="0.35s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.14" dur="2.9s" begin="0.35s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#8B5CF6"/>
+      <animateTransform attributeName="transform" type="translate" values="520 -30; 540 250" dur="3.0s" begin="0.15s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.2" dur="3.0s" begin="0.15s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#22C55E"/>
+      <animateTransform attributeName="transform" type="translate" values="610 -50; 585 250" dur="2.6s" begin="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.12" dur="2.6s" begin="0.6s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#FF2E63"/>
+      <animateTransform attributeName="transform" type="translate" values="720 -35; 750 250" dur="3.3s" begin="0.25s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.16" dur="3.3s" begin="0.25s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#0EA5E9"/>
+      <animateTransform attributeName="transform" type="translate" values="830 -55; 815 250" dur="2.8s" begin="0.45s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.14" dur="2.8s" begin="0.45s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#8B5CF6"/>
+      <animateTransform attributeName="transform" type="translate" values="940 -30; 965 250" dur="3.2s" begin="0.05s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.2" dur="3.2s" begin="0.05s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#22C55E"/>
+      <animateTransform attributeName="transform" type="translate" values="1040 -45; 1020 250" dur="2.5s" begin="0.75s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.12" dur="2.5s" begin="0.75s" repeatCount="indefinite"/>
+    </g>
+
+    <g><use xlink:href="#p" fill="#FF2E63"/>
+      <animateTransform attributeName="transform" type="translate" values="1130 -35; 1160 250" dur="3.6s" begin="0.18s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0.16" dur="3.6s" begin="0.18s" repeatCount="indefinite"/>
     </g>
   </g>
 
-  <!-- white sparks trying anyways on va voir si ca marcheee-->
+  <!-- ✨ MORE white sparks -->
   <g fill="#ffffff" opacity="0.95">
-    <g transform="translate(120 55) scale(0.9)">
-      <use xlink:href="#ws"/>
-      <animate attributeName="opacity" values="0.15;1;0.15" dur="2.2s" repeatCount="indefinite"/>
-    </g>
-    <g transform="translate(520 70) scale(0.75)">
-      <use xlink:href="#ws"/>
-      <animate attributeName="opacity" values="0.1;0.9;0.1" dur="1.7s" begin="0.3s" repeatCount="indefinite"/>
-    </g>
-    <g transform="translate(980 50) scale(0.95)">
-      <use xlink:href="#ws"/>
-      <animate attributeName="opacity" values="0.2;1;0.2" dur="2.6s" begin="0.2s" repeatCount="indefinite"/>
-    </g>
+    <!-- top twinkles -->
+    <g transform="translate(60 35) scale(0.6)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;1;0.05" dur="2.0s" repeatCount="indefinite"/></g>
+    <g transform="translate(130 55) scale(0.8)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.08;1;0.08" dur="2.6s" begin="0.2s" repeatCount="indefinite"/></g>
+    <g transform="translate(210 40) scale(0.55)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.06;0.95;0.06" dur="1.7s" begin="0.4s" repeatCount="indefinite"/></g>
+    <g transform="translate(300 65) scale(0.75)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.07;1;0.07" dur="2.3s" begin="0.1s" repeatCount="indefinite"/></g>
+    <g transform="translate(380 35) scale(0.6)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;1;0.05" dur="2.1s" begin="0.5s" repeatCount="indefinite"/></g>
+    <g transform="translate(460 60) scale(0.9)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.1;1;0.1" dur="2.8s" begin="0.35s" repeatCount="indefinite"/></g>
+    <g transform="translate(540 42) scale(0.55)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.06;0.9;0.06" dur="1.9s" begin="0.15s" repeatCount="indefinite"/></g>
+    <g transform="translate(620 70) scale(0.8)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.08;1;0.08" dur="2.4s" begin="0.25s" repeatCount="indefinite"/></g>
+    <g transform="translate(700 38) scale(0.6)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;1;0.05" dur="2.2s" begin="0.6s" repeatCount="indefinite"/></g>
+    <g transform="translate(780 58) scale(0.7)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.07;1;0.07" dur="2.5s" begin="0.05s" repeatCount="indefinite"/></g>
+    <g transform="translate(860 40) scale(0.55)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.06;0.95;0.06" dur="1.8s" begin="0.3s" repeatCount="indefinite"/></g>
+    <g transform="translate(940 65) scale(0.85)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.09;1;0.09" dur="2.9s" begin="0.2s" repeatCount="indefinite"/></g>
+    <g transform="translate(1020 36) scale(0.6)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;1;0.05" dur="2.0s" begin="0.45s" repeatCount="indefinite"/></g>
+    <g transform="translate(1100 62) scale(0.75)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.07;1;0.07" dur="2.6s" begin="0.1s" repeatCount="indefinite"/></g>
+
+    <!-- mid twinkles -->
+    <g transform="translate(95 115) scale(0.55)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.06;1;0.06" dur="2.3s" begin="0.2s" repeatCount="indefinite"/></g>
+    <g transform="translate(250 130) scale(0.7)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.07;1;0.07" dur="2.7s" begin="0.35s" repeatCount="indefinite"/></g>
+    <g transform="translate(430 105) scale(0.55)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;0.95;0.05" dur="1.9s" begin="0.5s" repeatCount="indefinite"/></g>
+    <g transform="translate(590 125) scale(0.8)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.08;1;0.08" dur="2.4s" begin="0.15s" repeatCount="indefinite"/></g>
+    <g transform="translate(760 110) scale(0.6)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;1;0.05" dur="2.1s" begin="0.6s" repeatCount="indefinite"/></g>
+    <g transform="translate(915 132) scale(0.75)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.07;1;0.07" dur="2.8s" begin="0.25s" repeatCount="indefinite"/></g>
+    <g transform="translate(1085 112) scale(0.6)"><use xlink:href="#ws"/><animate attributeName="opacity" values="0.05;0.95;0.05" dur="2.0s" begin="0.4s" repeatCount="indefinite"/></g>
   </g>
 
 </svg>
