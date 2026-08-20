@@ -15,9 +15,7 @@
 
 
 
-![LeetCode Stats](https://leetcard.jacoblin.cool/au_tryinh?theme=light)
-
-
+![LeetCode Stats](https://leetcard.jacoblin.cool/au_tryinh?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d)
 
 
 <!--
