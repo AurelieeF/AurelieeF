@@ -5,6 +5,7 @@
 
 ![Lofi](https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c)
 
+
 # 💫 About Me:
 💻 Software Engineering student building practical mini-apps and more<br>🧩 I enjoy turning ideas into clean, working systems.<br>⚙️ I work across front-end, back-end, APIs, and databases.<br>🎨 I draw and transform sketches into interactive apps.<br>🎮 Exploring coding thing step by step.
 
@@ -43,4 +44,7 @@
 
 <p align="center">
   <img width="120%" src="./stats.svg" alt="Streak Days" />
+</p>
+<p align="center">
+  <img width="1000" src=".github/Drivingggggggg.gif" alt="sunset banner" />
 </p>
