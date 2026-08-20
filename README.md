@@ -44,5 +44,5 @@
 <!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
 
 <p align="center">
-  <img width="120%" src="./Galacticrain.svg" alt="Animated bouncing circles" />
+  <img width="120%" src="./stats.svg" alt="Streak Days" />
 </p>
