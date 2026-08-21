@@ -240,11 +240,51 @@ def scrape_live(username):
     }
 
 
+# Candidate authenticated API routes to try in --probe-api mode. These are educated
+# guesses based on what the Exercism CLI is known to authenticate against (a Bearer
+# token from https://exercism.org/settings/api_cli) — NOT verified against real
+# responses yet. --probe-api exists specifically to find out which of these (if any)
+# actually return usable JSON, without guessing blindly in the main scrape path.
+PROBE_ENDPOINTS = [
+    "https://exercism.org/api/v2/profiles/{user}",
+    "https://exercism.org/api/v2/solutions",
+    "https://exercism.org/api/v2/solutions?criteria=&page=1",
+    "https://exercism.org/api/v2/tracks",
+]
+
+
+def probe_api(username, token):
+    import requests
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+        ),
+    }
+    print(f"Probing {len(PROBE_ENDPOINTS)} candidate endpoints for user={username}...\n")
+    for template in PROBE_ENDPOINTS:
+        url = template.format(user=username)
+        try:
+            resp = requests.get(url, headers=headers, timeout=15)
+            body_snippet = resp.text[:300].replace("\n", " ")
+            print(f"[{resp.status_code}] GET {url}")
+            print(f"    body: {body_snippet}\n")
+        except requests.RequestException as e:
+            print(f"[ERR] GET {url}\n    {e}\n")
+
+
 def main():
     p = argparse.ArgumentParser(description="Generate a neon Exercism stats SVG card.")
     p.add_argument("--user", required=True, help="Exercism username, e.g. AurelieeF")
     p.add_argument("--display-name", default=None)
     p.add_argument("--live", action="store_true", help="Scrape exercism.org/profiles/<user> instead of using manual values")
+    p.add_argument("--probe-api", action="store_true",
+                    help="Diagnostic mode: try candidate authenticated API endpoints with "
+                         "--token (or EXERCISM_TOKEN env var) and print what each returns. "
+                         "Writes nothing.")
+    p.add_argument("--token", default=None, help="Exercism personal API token, for --probe-api")
     p.add_argument("--reputation", type=int, default=0)
     p.add_argument("--solutions", type=int, default=0)
     p.add_argument("--badges", type=int, default=0)
@@ -257,6 +297,13 @@ def main():
              "the output file (so a CI job doesn't hard-fail / doesn't commit a broken SVG).",
     )
     args = p.parse_args()
+
+    if args.probe_api:
+        token = args.token or __import__("os").environ.get("EXERCISM_TOKEN")
+        if not token:
+            sys.exit("--probe-api needs a token: pass --token or set EXERCISM_TOKEN.")
+        probe_api(args.user, token)
+        return
 
     if args.live:
         try:
