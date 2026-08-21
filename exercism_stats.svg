@@ -1,4 +1,4 @@
-<svg width="520" height="248" viewBox="0 0 520 248" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for Aurelie: 5 exercises completed across 1 track(s)">
+<svg width="520" height="248" viewBox="0 0 520 248" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for Aurelie: 6 exercises completed across 1 track(s)">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0a0014" />
@@ -41,7 +41,7 @@
           stroke="url(#ringGrad)" stroke-width="9" stroke-linecap="round"
           stroke-dasharray="335.0 389.6"
           transform="rotate(-90 108 108)" />
-  <text x="108" y="110" text-anchor="middle" class="hero-value">5</text>
+  <text x="108" y="110" text-anchor="middle" class="hero-value">6</text>
   <text x="108" y="132" text-anchor="middle" class="hero-label">EXERCISES</text>
 
   <text x="226" y="42" class="card-title">Exercism Stats</text>
@@ -53,7 +53,7 @@
               stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
       </g>
       <text x="250" y="118" class="stat-label">Python</text>
-      <text x="492" y="118" class="stat-value" text-anchor="end">5</text>
+      <text x="492" y="118" class="stat-value" text-anchor="end">6</text>
 
   <text x="28" y="232" class="footer">github.com/AurelieeF/exercism-solutions</text>
 </svg>
