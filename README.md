@@ -3,9 +3,9 @@
 </p>
 
 <p align="left">
-   <img width="470" src="./dog11_cropped.gif" alt="Doggy study" />
+   <img width="450" src="./dog11_cropped.gif" alt="Doggy study" />
 
-  <img width="400" src="./FakeTerminal.svg" alt="terminal" />
+  <img width="380" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
