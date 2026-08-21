@@ -13,7 +13,7 @@ jobs:
         with:
           github_user_name: AurelieeF
           outputs: |
-            dist/github-snake.svg?palette=github-light
+            dist/github-snake.svg?color_snake=%23ff2d95&color_dots=%23150022,%234a0f7a,%239b30ff,%23ff2d95,%23ffd93d
             dist/github-snake-dark.svg?color_snake=%23ffffff&color_dots=%23150022,%234a0f7a,%239b30ff,%23ff2d95,%23ffd93d
       - uses: crazy-max/ghaction-github-pages@v4
         with:
