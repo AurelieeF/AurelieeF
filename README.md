@@ -3,9 +3,9 @@
 </p>
 
 <p align="left">
-   
-  <img width="415" src="https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c" alt="Lofi" />
-  <img width="415" src="./FakeTerminal.svg" alt="terminal" />
+   <img width="500" src="./dog1 (1).gif" alt="Doggy study" />
+
+  <img width="300" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
