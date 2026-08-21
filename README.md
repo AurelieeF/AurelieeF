@@ -3,9 +3,9 @@
 </p>
 
 
-![Lofi](https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c)
 <p align="center">
-  <img width="120%" src="./FakeTerminal.svg" alt="Streak Days" />
+  <img width="380" src="https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c" alt="Lofi" />
+  <img width="380" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
