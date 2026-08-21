@@ -3,9 +3,9 @@
 </p>
 
 
-<p align="center">
+<p align="left">
   <img width="380" src="https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c" alt="Lofi" />
-  <img width="550" src="./FakeTerminal.svg" alt="terminal" />
+  <img width="380" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
