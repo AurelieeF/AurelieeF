@@ -1,0 +1,59 @@
+name: Update Exercism Stats SVG
+
+# Runs on a schedule and refreshes exercism_stats.svg from your public
+# Exercism profile. This does NOT need to know which repo Exercism's
+# GitHub Syncer pushes your solutions to (that repo can stay separate) —
+# it just re-reads exercism.org/profiles/AurelieeF periodically, so it
+# works the same whether the Syncer is set to "commits" or "Pull Requests".
+#
+# Setup:
+#   1. In this repo, create the folder .github/workflows/ if it doesn't
+#      exist yet, and put this file inside it.
+#   2. Make sure generate_exercism_stats_svg.py lives at the repo root
+#      (or update the `python3` command path below to match).
+#   3. That's it — no secrets needed. The default GITHUB_TOKEN is enough
+#      because this workflow only commits to the same repo it runs in.
+
+on:
+  schedule:
+    # Every 6 hours. Adjust the cron if you want it more/less frequent
+    # (minimum practical interval on GitHub Actions is ~5 min, but there's
+    # no reason to run this that often).
+    - cron: "0 */6 * * *"
+  workflow_dispatch: {}   # lets you trigger it manually from the Actions tab
+  push:
+    paths:
+      - "generate_exercism_stats_svg.py"   # re-run automatically if you edit the script
+
+permissions:
+  contents: write
+
+jobs:
+  update-svg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Regenerate exercism_stats.svg
+        run: |
+          python3 generate_exercism_stats_svg.py \
+            --user AurelieeF \
+            --display-name Aurelie \
+            --live \
+            --soft-fail \
+            -o exercism_stats.svg
+
+      - name: Commit changes if the SVG actually changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh exercism_stats.svg"
+          file_pattern: exercism_stats.svg
