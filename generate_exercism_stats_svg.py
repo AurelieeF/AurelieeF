@@ -123,10 +123,39 @@ def fetch_from_solutions_repo(repo, base_path="solutions", branch="main"):
     tracks = sorted(track_exercises.keys())
     counts = [(t.replace("-", " ").title(), len(track_exercises[t])) for t in tracks]
     total = sum(c for _, c in counts)
-    return {"total": total, "track_counts": counts}
+    return {"total": total, "track_counts": counts, "track_slugs": tracks}
 
 
-def build_svg(display_name, username, total, track_counts, repo):
+def load_track_totals(path):
+    """Reads the manually-maintained {"track-slug": total_exercise_count} JSON file.
+    Manual by design: Exercism's own site shows the authoritative count (e.g.
+    exercism.org/tracks/python/exercises?status=available -> 146) but that site
+    blocks automated requests, and the open-source config.json in each track's repo
+    turned out NOT to match that number when counted programmatically (226 practice
+    + 21 concept entries, filtered different ways, none landed on 146) — not worth
+    guessing at a filter that might quietly be wrong. A human copying the real
+    number from the site once in a while is more trustworthy than a script guessing.
+    Missing file or missing/invalid entry for a track -> that track just shows its
+    completed count with no denominator, same as any other "unknown" case.
+    """
+    import json
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+        return {str(k).lower(): int(v) for k, v in raw.items() if isinstance(v, (int, float)) and v > 0}
+    except (ValueError, TypeError) as e:
+        print(f"::warning::Could not parse {path}: {e}. Ignoring it for this run.", file=sys.stderr)
+        return {}
+
+
+def build_svg(display_name, username, total, track_rows, repo, available_total=None):
+    """track_rows: list of (label, completed, available_or_None) — available_or_None
+    comes from fetch_track_exercise_total; when it's None (lookup failed for that
+    track), the row shows just the completed count, not a fabricated fraction.
+    available_total: sum of the known per-track totals — None if none were resolved,
+    in which case the ring falls back to a fixed decorative arc instead of a fake %."""
     width, height_min = 520, 210
     pad = 28
     ring_cx, ring_cy, ring_r, ring_sw = 108, 108, 62, 9
@@ -138,21 +167,22 @@ def build_svg(display_name, username, total, track_counts, repo):
     row_gap = 32
 
     # Card grows to fit however many tracks there are (min 3 rows worth of height).
-    n_rows = max(len(track_counts), 3)
+    n_rows = max(len(track_rows), 3)
     height = max(height_min, row_start_y + n_rows * row_gap + 34)
 
     rows_svg = []
-    if track_counts:
-        for i, (track, count) in enumerate(track_counts):
+    if track_rows:
+        for i, (track, count, avail) in enumerate(track_rows):
             y = row_start_y + i * row_gap
             accent = ROW_ACCENTS[i % len(ROW_ACCENTS)]
+            value_text = f"{count} / {avail}" if avail else str(count)
             rows_svg.append(f'''
       <g transform="translate({right_x}, {y - 13})">
         <path d="{ICON_TRACK}" transform="scale(0.55)" fill="none" stroke="{accent}"
               stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
       </g>
       <text x="{right_x + 24}" y="{y}" class="stat-label">{esc(track)}</text>
-      <text x="{width - pad}" y="{y}" class="stat-value" text-anchor="end">{esc(count)}</text>''')
+      <text x="{width - pad}" y="{y}" class="stat-value" text-anchor="end">{esc(value_text)}</text>''')
     else:
         rows_svg.append(f'''
       <text x="{right_x}" y="{row_start_y}" class="stat-label" opacity="0.7">No exercises found yet</text>''')
@@ -160,7 +190,14 @@ def build_svg(display_name, username, total, track_counts, repo):
     subtitle = f"@{username}" if username and username != display_name else ""
     hero_label = "exercises" if total != 1 else "exercise"
 
-    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for {esc(display_name)}: {esc(total)} exercises completed across {esc(len(track_counts))} track(s)">
+    if available_total:
+        fraction = max(0.0, min(total / available_total, 1.0))
+        hero_sub = f"of {available_total}"
+    else:
+        fraction = 0.86  # unknown denominator — fixed decorative arc, not a claimed %
+        hero_sub = None
+
+    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for {esc(display_name)}: {esc(total)} exercises completed across {esc(len(track_rows))} track(s)">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="{BG_1}" />
@@ -187,6 +224,7 @@ def build_svg(display_name, username, total, track_counts, repo):
       .stat-value    {{ font: 700 15px 'Segoe UI', Ubuntu, Sans-Serif; fill: {TEXT}; }}
       .hero-value    {{ font: 700 42px 'Segoe UI', Ubuntu, Sans-Serif; fill: {TEXT}; }}
       .hero-label    {{ font: 600 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: {SUBTEXT}; letter-spacing: 0.05em; }}
+      .hero-sub      {{ font: 400 10.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: {SUBTEXT}; opacity: 0.75; }}
       .footer        {{ font: 400 10.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: {SUBTEXT}; opacity: 0.8; }}
     </style>
   </defs>
@@ -196,15 +234,17 @@ def build_svg(display_name, username, total, track_counts, repo):
 
   <circle cx="{ring_cx}" cy="{ring_cy}" r="{ring_r + 34}" fill="url(#glow)" />
 
-  <!-- decorative ring framing the headline number (ornamental, not a % gauge) -->
+  <!-- ring fill = completed/available when the denominator is known; otherwise a
+       fixed decorative arc (never a fabricated percentage) -->
   <circle cx="{ring_cx}" cy="{ring_cy}" r="{ring_r}" fill="none"
           stroke="{BG_2}" stroke-width="{ring_sw}" opacity="0.6" />
   <circle cx="{ring_cx}" cy="{ring_cy}" r="{ring_r}" fill="none"
           stroke="url(#ringGrad)" stroke-width="{ring_sw}" stroke-linecap="round"
-          stroke-dasharray="{ring_circumference * 0.86:.1f} {ring_circumference:.1f}"
+          stroke-dasharray="{ring_circumference * fraction:.1f} {ring_circumference:.1f}"
           transform="rotate(-90 {ring_cx} {ring_cy})" />
-  <text x="{ring_cx}" y="{ring_cy + 2}" text-anchor="middle" class="hero-value">{esc(total)}</text>
-  <text x="{ring_cx}" y="{ring_cy + 24}" text-anchor="middle" class="hero-label">{hero_label.upper()}</text>
+  <text x="{ring_cx}" y="{ring_cy - 4}" text-anchor="middle" class="hero-value">{esc(total)}</text>
+  <text x="{ring_cx}" y="{ring_cy + 16}" text-anchor="middle" class="hero-label">{hero_label.upper()}</text>
+  {f'<text x="{ring_cx}" y="{ring_cy + 32}" text-anchor="middle" class="hero-sub">{esc(hero_sub)}</text>' if hero_sub else ""}
 
   <text x="{right_x}" y="42" class="card-title">Exercism Stats</text>
   <text x="{right_x}" y="62" class="card-subtitle">{esc(display_name)}{" &#183; " + esc(subtitle) if subtitle else ""}</text>
@@ -223,6 +263,11 @@ def main():
     p.add_argument("--repo", required=True, help="owner/repo where Exercism's GitHub Syncer pushes solutions, e.g. AurelieeF/exercism-solutions")
     p.add_argument("--repo-path", default="solutions", help="Path inside the repo containing <track>/<exercise> folders (default: solutions)")
     p.add_argument("--branch", default="main")
+    p.add_argument("--totals-file", default="exercism_track_totals.json",
+                    help="JSON file mapping track slug -> total exercise count, e.g. "
+                         '{"python": 146}. Maintained by hand (see the file\'s own comments '
+                         "for where to find the real number). Missing entries just mean that "
+                         "track's row shows its completed count with no fraction.")
     p.add_argument("-o", "--output", default="exercism_stats.svg")
     p.add_argument(
         "--soft-fail",
@@ -240,8 +285,32 @@ def main():
             return
         sys.exit(str(e))
 
+    # For each track that has completed exercises, look up its manually-entered total
+    # (see --totals-file) so the ring can show a real completed/available fraction.
+    totals = load_track_totals(args.totals_file)
+
+    track_rows = []
+    resolved_total = 0
+    for (label, completed), slug in zip(data["track_counts"], data["track_slugs"]):
+        avail = totals.get(slug.lower())
+        track_rows.append((label, completed, avail))
+        if avail:
+            resolved_total += avail
+            print(f"{slug}: {completed} / {avail} (from {args.totals_file})")
+        else:
+            print(f"::warning::No total in {args.totals_file} for track '{slug}' — "
+                  f"showing '{completed}' alone for that row instead of a fraction. "
+                  f"Add \"{slug}\": <count> to that file to fix (find <count> at "
+                  f"https://exercism.org/tracks/{slug}/exercises?status=available).", file=sys.stderr)
+
+    # Only feed the ring a fraction when EVERY track resolved a denominator — a partial
+    # sum would mix "completed across all tracks" (the numerator) against "available in
+    # only some tracks" (a smaller denominator), which reads as a real % but wouldn't be.
+    all_resolved = len(track_rows) > 0 and all(avail for _, _, avail in track_rows)
+    available_total = resolved_total if all_resolved else None
+
     display_name = args.display_name or args.user
-    svg = build_svg(display_name, args.user, data["total"], data["track_counts"], args.repo)
+    svg = build_svg(display_name, args.user, data["total"], track_rows, args.repo, available_total=available_total)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(svg)
     print(f"Wrote {args.output} — {data['total']} exercises across {len(data['track_counts'])} track(s)")
