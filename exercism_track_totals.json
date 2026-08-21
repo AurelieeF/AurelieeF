@@ -1,0 +1,5 @@
+{
+  "_comment": "How many exercises exist in total for each track you've started, so the SVG can show a real 'completed / total' fraction instead of just a count. This is maintained BY HAND — Exercism's own site (the source of truth) blocks automated requests, so a script can't safely fetch this number itself. To find the real number for a track: go to https://exercism.org/tracks/<track-slug>/exercises?status=available and look at the count shown there (e.g. for Python: https://exercism.org/tracks/python/exercises?status=available -> 146). The track slug (the key below, lowercase) must match the folder name used in your solutions repo, e.g. 'python', 'sqlite'. A track with no entry here just shows its completed count with no fraction — safe default, nothing breaks if you forget to add one.",
+
+  "python": 146
+}
