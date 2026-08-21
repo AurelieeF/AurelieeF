@@ -14,6 +14,10 @@ name: Update Exercism Stats SVG
 #   3. No secrets needed — the default GITHUB_TOKEN is enough since this
 #      workflow only commits to the same repo it runs in.
 
+concurrency:
+  group: exercism-stats-svg
+  cancel-in-progress: false   # queue runs instead of letting two race to push at once
+
 on:
   workflow_dispatch:
     inputs:
