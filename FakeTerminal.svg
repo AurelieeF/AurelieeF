@@ -33,8 +33,10 @@
     </style>
   </defs>
 
+  <!-- base -->
   <rect width="400" height="364" rx="10" fill="url(#bgGrad)"/>
 
+  <!-- fake hacking movement, super transparent, sits behind everything -->
   <g clip-path="url(#cardClip)" opacity="0.10" font-family="'SF Mono', Consolas, Menlo, monospace" font-size="12">
     <text class="rain" x="20"  y="0" fill="#ff2d95" style="animation-duration:9s;   animation-delay:-1s;">0<tspan x="20" dy="15">1</tspan><tspan x="20" dy="15">0</tspan><tspan x="20" dy="15">0</tspan><tspan x="20" dy="15">1</tspan><tspan x="20" dy="15">1</tspan></text>
     <text class="rain" x="60"  y="0" fill="#9b30ff" style="animation-duration:12s;  animation-delay:-4s;">1<tspan x="60" dy="15">1</tspan><tspan x="60" dy="15">0</tspan><tspan x="60" dy="15">1</tspan><tspan x="60" dy="15">0</tspan><tspan x="60" dy="15">0</tspan></text>
