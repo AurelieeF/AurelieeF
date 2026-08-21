@@ -1,0 +1,64 @@
+name: Update Exercism Stats SVG
+
+# Fully automatic again — no manual numbers needed. Instead of exercism.org
+# (blocked by Cloudflare for automated requests, confirmed by testing),
+# this reads github.com/AurelieeF/exercism-solutions directly via GitHub's
+# own API: GitHub Actions talking to GitHub's API is never Cloudflare-
+# blocked, and the repo is public so no token is required.
+#
+# It counts exercise folders under solutions/<track>/<exercise-slug>/ —
+# exactly the structure Exercism's GitHub Syncer creates — so the SVG
+# always reflects however many exercises have actually landed in that repo.
+#
+# Setup (only needed once):
+#   1. This file lives at .github/workflows/exercism-stats.yml
+#   2. generate_exercism_stats_svg.py lives at the repo root
+#   3. No secrets needed.
+
+concurrency:
+  group: exercism-stats-svg
+  cancel-in-progress: false   # queue runs instead of letting two race to push at once
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours; adjust if you want it more/less frequent
+  workflow_dispatch: {}       # lets you trigger it manually from the Actions tab any time
+  push:
+    paths:
+      - "generate_exercism_stats_svg.py"
+
+permissions:
+  contents: write
+
+jobs:
+  update-svg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Regenerate exercism_stats.svg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # raises the GitHub API rate limit; not required, just nice to have
+        run: |
+          python3 generate_exercism_stats_svg.py \
+            --user AurelieeF \
+            --display-name Aurelie \
+            --repo AurelieeF/exercism-solutions \
+            --repo-path solutions \
+            --soft-fail \
+            -o exercism_stats.svg
+
+      - name: Commit changes if the SVG actually changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh exercism_stats.svg"
+          file_pattern: exercism_stats.svg
