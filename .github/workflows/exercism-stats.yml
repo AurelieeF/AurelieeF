@@ -1,29 +1,38 @@
 name: Update Exercism Stats SVG
 
-# Runs on a schedule and refreshes exercism_stats.svg from your public
-# Exercism profile. This does NOT need to know which repo Exercism's
-# GitHub Syncer pushes your solutions to (that repo can stay separate) —
-# it just re-reads exercism.org/profiles/AurelieeF periodically, so it
-# works the same whether the Syncer is set to "commits" or "Pull Requests".
+# Refreshes exercism_stats.svg on demand. Exercism sits behind Cloudflare
+# and blocks automated (non-browser) requests — including ones from GitHub
+# Actions — so a scheduled "live scrape" isn't reliable and has been
+# dropped. Instead: whenever you've finished new exercises, go to the
+# Actions tab, click "Run workflow", type in the 3 numbers + your tracks
+# from your profile page (https://exercism.org/profiles/AurelieeF), and
+# it regenerates + commits the SVG for you. Takes about 15 seconds.
 #
-# Setup:
-#   1. In this repo, create the folder .github/workflows/ if it doesn't
-#      exist yet, and put this file inside it.
-#   2. Make sure generate_exercism_stats_svg.py lives at the repo root
-#      (or update the `python3` command path below to match).
-#   3. That's it — no secrets needed. The default GITHUB_TOKEN is enough
-#      because this workflow only commits to the same repo it runs in.
+# Setup (only needed once):
+#   1. This file lives at .github/workflows/exercism-stats.yml
+#   2. generate_exercism_stats_svg.py lives at the repo root
+#   3. No secrets needed — the default GITHUB_TOKEN is enough since this
+#      workflow only commits to the same repo it runs in.
 
 on:
-  schedule:
-    # Every 6 hours. Adjust the cron if you want it more/less frequent
-    # (minimum practical interval on GitHub Actions is ~5 min, but there's
-    # no reason to run this that often).
-    - cron: "0 */6 * * *"
-  workflow_dispatch: {}   # lets you trigger it manually from the Actions tab
-  push:
-    paths:
-      - "generate_exercism_stats_svg.py"   # re-run automatically if you edit the script
+  workflow_dispatch:
+    inputs:
+      reputation:
+        description: "Reputation (from your profile page)"
+        required: true
+        default: "5"
+      solutions:
+        description: "Solutions published"
+        required: true
+        default: "5"
+      badges:
+        description: "Badges collected"
+        required: true
+        default: "2"
+      tracks:
+        description: "Tracks worked in, space-separated (e.g. Python Sqlite)"
+        required: true
+        default: "Python"
 
 permissions:
   contents: write
@@ -40,16 +49,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install requests
-
       - name: Regenerate exercism_stats.svg
         run: |
           python3 generate_exercism_stats_svg.py \
             --user AurelieeF \
             --display-name Aurelie \
-            --live \
-            --soft-fail \
+            --reputation "${{ github.event.inputs.reputation }}" \
+            --solutions "${{ github.event.inputs.solutions }}" \
+            --badges "${{ github.event.inputs.badges }}" \
+            --tracks ${{ github.event.inputs.tracks }} \
             -o exercism_stats.svg
 
       - name: Commit changes if the SVG actually changed
