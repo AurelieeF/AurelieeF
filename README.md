@@ -17,7 +17,7 @@
 #  🧠 LeetCode Stats:
 
 <p align="center">
-  <img width="480" src="https://leetcard.jacoblin.cool/au_tryinh?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d" alt="LeetCode Stats" />
+  <img width="440" src="https://leetcard.jacoblin.cool/au_tryinh?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d" alt="LeetCode Stats" />
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img width="380" src="./exercism_stats.svg" alt="Exercism Stats" />
 </p>
