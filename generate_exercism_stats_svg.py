@@ -3,33 +3,31 @@
 generate_exercism_stats_svg.py
 
 Generates a neon-themed "Exercism Stats" SVG card for a GitHub profile
-README, in the same visual style as the existing LeetCode card
-(https://leetcard.jacoblin.cool/...?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d)
-and the repo's own generate_stats_svg.py output.
+README, styled to match the existing LeetCode card
+(https://leetcard.jacoblin.cool/...?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d).
 
-Two ways to get data in:
+Data source: NOT exercism.org. That site sits behind Cloudflare and blocks
+automated requests (including from GitHub Actions) — confirmed by hand,
+every route tried came back 403 with a Cloudflare challenge page, token or
+not. Instead, this reads the GitHub repo that Exercism's own "GitHub
+Syncer" feature already pushes your solutions into
+(github.com/AurelieeF/exercism-solutions), via GitHub's own API. That's
+GitHub talking to GitHub — no Cloudflare in the way, no token needed for a
+public repo, and it's exactly the data you actually wanted: how many
+exercises you've done, per track, straight from the folders the Syncer
+creates (solutions/<track>/<exercise-slug>/).
 
-1. LIVE (best-effort scrape of the public profile page)
-   python3 generate_exercism_stats_svg.py --user AurelieeF --live -o exercism_stats.svg
+Trade-off: this can't show Reputation or Badges — those only exist on
+exercism.org's site, not in the repo. What it shows instead: total
+exercises completed, broken down by track. That's a fair swap given the
+goal was "how many Python exercises did I do," not the exercism.org
+gamification numbers.
 
-   Exercism does not expose a public, unauthenticated JSON API for profile
-   stats (the old community scraper is archived, and the official API v2
-   requires a personal access token). This mode scrapes the public HTML
-   profile page instead, which is allowed to view but IS fragile: Exercism
-   sits behind Cloudflare and the page markup can change at any time.
-   If the scrape fails, it exits with an error instead of guessing.
-
-2. MANUAL / CI-friendly (recommended)
-   python3 generate_exercism_stats_svg.py \
-       --user AurelieeF --display-name Aurelie \
-       --reputation 5 --solutions 5 --badges 2 \
-       --tracks Python \
-       -o exercism_stats.svg
-
-   Pass the numbers yourself (copy-pasted from your profile page, or piped
-   in from another step). This is what's used to produce the first SVG
-   below, and it's the safer choice for a scheduled GitHub Action since it
-   never depends on scraping succeeding.
+Usage:
+  python3 generate_exercism_stats_svg.py \
+      --user AurelieeF --display-name Aurelie \
+      --repo AurelieeF/exercism-solutions --repo-path solutions \
+      -o exercism_stats.svg
 
 Embed the result in your README exactly like the other stats images:
     <img width="1000" src="./exercism_stats.svg" alt="Exercism Stats" />
@@ -37,7 +35,7 @@ Embed the result in your README exactly like the other stats images:
 
 import argparse
 import html
-import re
+import os
 import sys
 
 # ---- Palette (matches the LeetCode card + Tech Stack badges) ----
@@ -49,59 +47,120 @@ PINK = "#ff2d95"
 PURPLE = "#9b30ff"
 YELLOW = "#ffd93d"
 
-ROW_COLORS = [PINK, PURPLE, YELLOW, PINK]
+ROW_ACCENTS = [PINK, PURPLE, YELLOW]
+
+# Minimal monoline "code brackets" icon (viewBox 0 0 24 24), reused per track row.
+ICON_TRACK = "M8 4L2 12l6 8 M16 4l6 8-6 8 M13 3l-2 18"
 
 
 def esc(s):
     return html.escape(str(s), quote=True)
 
 
-# Minimal 15x15 monoline icon paths (viewBox 0 0 24 24), one per secondary stat row.
-ICON_STAR = "M12 2l2.6 6.6L21 9.2l-5 4.6 1.4 6.9L12 17.3 6.6 20.7 8 13.8 3 9.2l6.4-.6z"  # reputation
-ICON_MEDAL = "M8.5 2h7l-1.8 5.4a6.5 6.5 0 1 1 -3.4 0z M12 12.4a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2z"  # badges
-ICON_LAYERS = "M12 3l9 4.5-9 4.5-9-4.5z M3 12l9 4.5 9-4.5 M3 16.5l9 4.5 9-4.5"  # tracks
-
-ROW_ICONS = [ICON_STAR, ICON_MEDAL, ICON_LAYERS]
-ROW_ACCENTS = [PINK, YELLOW, PURPLE]
+class FetchError(Exception):
+    """Raised when the sync repo can't be read. Non-fatal by design: the caller
+    decides whether to fail the build or just skip this run and keep the old SVG."""
 
 
-def build_svg(display_name, username, reputation, solutions, badges, tracks):
-    tracks_label = ", ".join(tracks) if tracks else "—"
-    secondary = [
-        ("Reputation", reputation),
-        ("Badges collected", badges),
-        ("Tracks", tracks_label),
-    ]
+def fetch_from_solutions_repo(repo, base_path="solutions", branch="main"):
+    """Reads the exercise folder structure straight from a GitHub repo via the
+    GitHub REST API (git trees, recursive) — no auth needed for a public repo.
+    Expects paths shaped like '<base_path>/<track>/<exercise-slug>/...',
+    exactly what Exercism's GitHub Syncer produces.
+    """
+    try:
+        import requests
+    except ImportError:
+        raise FetchError("`requests` is not installed. Run: pip install requests --break-system-packages")
 
-    width, height = 520, 210
+    url = f"https://api.github.com/repos/{repo}/git/trees/{branch}?recursive=1"
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        # Optional: raises the API rate limit from 60/hr to 5000/hr. In a GitHub
+        # Action, the default GITHUB_TOKEN can be passed in for this — it does NOT
+        # need write access to the sync repo, reading a public repo works with any
+        # valid token or none at all.
+        headers["Authorization"] = f"Bearer {token}"
+
+    try:
+        resp = requests.get(url, headers=headers, timeout=20)
+    except requests.RequestException as e:
+        raise FetchError(f"Network error fetching {url}: {e}")
+
+    if resp.status_code != 200:
+        raise FetchError(
+            f"Could not read {repo}@{branch} (HTTP {resp.status_code}): {resp.text[:200]}"
+        )
+
+    data = resp.json()
+    if data.get("truncated"):
+        raise FetchError(
+            f"GitHub's tree response for {repo}@{branch} was truncated (repo too large "
+            "for a single call) — counts would be incomplete, refusing to guess."
+        )
+
+    prefix = base_path.strip("/") + "/"
+    track_exercises = {}  # track -> set of exercise slugs
+
+    for entry in data.get("tree", []):
+        if entry.get("type") != "tree":
+            continue
+        path = entry.get("path", "")
+        if not path.startswith(prefix):
+            continue
+        parts = path[len(prefix):].split("/")
+        if len(parts) == 2 and all(parts):
+            track, exercise = parts
+            track_exercises.setdefault(track, set()).add(exercise)
+
+    if not track_exercises:
+        raise FetchError(
+            f"No '{base_path}/<track>/<exercise>' folders found in {repo}@{branch} — "
+            "check --repo-path matches the real folder structure."
+        )
+
+    tracks = sorted(track_exercises.keys())
+    counts = [(t.replace("-", " ").title(), len(track_exercises[t])) for t in tracks]
+    total = sum(c for _, c in counts)
+    return {"total": total, "track_counts": counts}
+
+
+def build_svg(display_name, username, total, track_counts, repo):
+    width, height_min = 520, 210
     pad = 28
     ring_cx, ring_cy, ring_r, ring_sw = 108, 108, 62, 9
     ring_circumference = 2 * 3.14159265 * ring_r
 
     right_x = 226
-    right_w = width - pad - right_x
-
     divider_y = 90
     row_start_y = 118
     row_gap = 32
 
+    # Card grows to fit however many tracks there are (min 3 rows worth of height).
+    n_rows = max(len(track_counts), 3)
+    height = max(height_min, row_start_y + n_rows * row_gap + 34)
+
     rows_svg = []
-    for i, (label, value) in enumerate(secondary):
-        y = row_start_y + i * row_gap
-        icon_path = ROW_ICONS[i % len(ROW_ICONS)]
-        accent = ROW_ACCENTS[i % len(ROW_ACCENTS)]
-        rows_svg.append(f'''
+    if track_counts:
+        for i, (track, count) in enumerate(track_counts):
+            y = row_start_y + i * row_gap
+            accent = ROW_ACCENTS[i % len(ROW_ACCENTS)]
+            rows_svg.append(f'''
       <g transform="translate({right_x}, {y - 13})">
-        <path d="{icon_path}" transform="scale(0.6)" fill="none" stroke="{accent}"
-              stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
+        <path d="{ICON_TRACK}" transform="scale(0.55)" fill="none" stroke="{accent}"
+              stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
       </g>
-      <text x="{right_x + 24}" y="{y}" class="stat-label">{esc(label)}</text>
-      <text x="{width - pad}" y="{y}" class="stat-value" text-anchor="end">{esc(value)}</text>''')
+      <text x="{right_x + 24}" y="{y}" class="stat-label">{esc(track)}</text>
+      <text x="{width - pad}" y="{y}" class="stat-value" text-anchor="end">{esc(count)}</text>''')
+    else:
+        rows_svg.append(f'''
+      <text x="{right_x}" y="{row_start_y}" class="stat-label" opacity="0.7">No exercises found yet</text>''')
 
     subtitle = f"@{username}" if username and username != display_name else ""
-    hero_label = "solutions" if solutions != 1 else "solution"
+    hero_label = "exercises" if total != 1 else "exercise"
 
-    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for {esc(display_name)}: {esc(solutions)} solutions published, {esc(reputation)} reputation, {esc(badges)} badges">
+    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for {esc(display_name)}: {esc(total)} exercises completed across {esc(len(track_counts))} track(s)">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="{BG_1}" />
@@ -143,12 +202,8 @@ def build_svg(display_name, username, reputation, solutions, badges, tracks):
   <circle cx="{ring_cx}" cy="{ring_cy}" r="{ring_r}" fill="none"
           stroke="url(#ringGrad)" stroke-width="{ring_sw}" stroke-linecap="round"
           stroke-dasharray="{ring_circumference * 0.86:.1f} {ring_circumference:.1f}"
-          transform="rotate(-90 {ring_cx} {ring_cy})">
-    <animate attributeName="stroke-dasharray"
-      values="0 {ring_circumference:.1f}; {ring_circumference * 0.86:.1f} {ring_circumference:.1f}"
-      dur="1.1s" fill="freeze" />
-  </circle>
-  <text x="{ring_cx}" y="{ring_cy + 2}" text-anchor="middle" class="hero-value">{esc(solutions)}</text>
+          transform="rotate(-90 {ring_cx} {ring_cy})" />
+  <text x="{ring_cx}" y="{ring_cy + 2}" text-anchor="middle" class="hero-value">{esc(total)}</text>
   <text x="{ring_cx}" y="{ring_cy + 24}" text-anchor="middle" class="hero-label">{hero_label.upper()}</text>
 
   <text x="{right_x}" y="42" class="card-title">Exercism Stats</text>
@@ -156,177 +211,40 @@ def build_svg(display_name, username, reputation, solutions, badges, tracks):
   <line x1="{right_x}" y1="{divider_y}" x2="{width - pad}" y2="{divider_y}" stroke="{SUBTEXT}" stroke-opacity="0.22" stroke-width="1" />
 {"".join(rows_svg)}
 
-  <text x="{pad}" y="{height - 16}" class="footer">exercism.org/profiles/{esc(username)}</text>
+  <text x="{pad}" y="{height - 16}" class="footer">github.com/{esc(repo)}</text>
 </svg>'''
     return svg
 
 
-class ScrapeError(Exception):
-    """Raised when the live profile page can't be fetched or parsed. Non-fatal by design:
-    the caller decides whether to fail the build or just skip this run and keep the old SVG."""
-
-
-def scrape_live(username):
-    """Best-effort scrape of the public profile page. No auth, no guarantees."""
-    try:
-        import requests
-    except ImportError:
-        raise ScrapeError("`requests` is not installed. Run: pip install requests --break-system-packages")
-
-    url = f"https://exercism.org/profiles/{username}"
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
-        )
-    }
-    try:
-        resp = requests.get(url, headers=headers, timeout=15)
-    except requests.RequestException as e:
-        raise ScrapeError(f"Network error fetching {url}: {e}")
-
-    if resp.status_code != 200:
-        raise ScrapeError(
-            f"Could not fetch {url} (HTTP {resp.status_code}). "
-            "Exercism may be rate-limiting or Cloudflare-blocking this request."
-        )
-    page = resp.text
-
-    def find_int(pattern, text, default=0):
-        m = re.search(pattern, text)
-        return int(m.group(1)) if m else default
-
-    reputation = find_int(r'has\s*</span>\s*(\d+)\s*Reputation', page,
-                           default=find_int(r'(\d+)\s*Reputation', page))
-    solutions = find_int(r'(\d+)\s*solutions? published', page)
-    badges = find_int(r'(\d+)\s*badges? collected', page)
-
-    # The summary page above only lists the *most recent* solutions, so relying on it
-    # alone for the track list would silently drop an older track once enough newer
-    # solutions push it off that list. The dedicated /solutions page lists every
-    # published solution (paginated), so walk it until a page comes back empty or
-    # we hit a sane page cap, and union the tracks found across all pages.
-    track_pattern = re.compile(r'/tracks/([a-z0-9\-]+)/exercises/[a-z0-9\-]+/solutions/' + re.escape(username))
-    tracks_set = set(track_pattern.findall(page))
-
-    for pg in range(1, 11):  # 10 pages is generous headroom; stop early once a page is empty
-        sol_url = f"https://exercism.org/profiles/{username}/solutions?page={pg}"
-        try:
-            sol_resp = requests.get(sol_url, headers=headers, timeout=15)
-        except requests.RequestException:
-            break  # non-fatal: keep whatever tracks we already found
-        if sol_resp.status_code != 200:
-            break
-        found = track_pattern.findall(sol_resp.text)
-        if not found:
-            break
-        before = len(tracks_set)
-        tracks_set.update(found)
-        if len(tracks_set) == before and pg > 1:
-            # no new tracks on this page and we're past page 1 — likely deep enough
-            break
-
-    tracks = sorted(t.replace("-", " ").title() for t in tracks_set)
-
-    display_name_match = re.search(r'<title>([^<|]+)', page)
-    display_name = display_name_match.group(1).strip() if display_name_match else username
-
-    return {
-        "display_name": display_name,
-        "reputation": reputation,
-        "solutions": solutions,
-        "badges": badges,
-        "tracks": tracks,
-    }
-
-
-# Candidate authenticated API routes to try in --probe-api mode. These are educated
-# guesses based on what the Exercism CLI is known to authenticate against (a Bearer
-# token from https://exercism.org/settings/api_cli) — NOT verified against real
-# responses yet. --probe-api exists specifically to find out which of these (if any)
-# actually return usable JSON, without guessing blindly in the main scrape path.
-PROBE_ENDPOINTS = [
-    "https://exercism.org/api/v2/profiles/{user}",
-    "https://exercism.org/api/v2/solutions",
-    "https://exercism.org/api/v2/solutions?criteria=&page=1",
-    "https://exercism.org/api/v2/tracks",
-]
-
-
-def probe_api(username, token):
-    import requests
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/json",
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
-        ),
-    }
-    print(f"Probing {len(PROBE_ENDPOINTS)} candidate endpoints for user={username}...\n")
-    for template in PROBE_ENDPOINTS:
-        url = template.format(user=username)
-        try:
-            resp = requests.get(url, headers=headers, timeout=15)
-            body_snippet = resp.text[:300].replace("\n", " ")
-            print(f"[{resp.status_code}] GET {url}")
-            print(f"    body: {body_snippet}\n")
-        except requests.RequestException as e:
-            print(f"[ERR] GET {url}\n    {e}\n")
-
-
 def main():
-    p = argparse.ArgumentParser(description="Generate a neon Exercism stats SVG card.")
-    p.add_argument("--user", required=True, help="Exercism username, e.g. AurelieeF")
+    p = argparse.ArgumentParser(description="Generate a neon Exercism stats SVG card from your GitHub sync repo.")
+    p.add_argument("--user", required=True, help="Display name / Exercism username, e.g. AurelieeF")
     p.add_argument("--display-name", default=None)
-    p.add_argument("--live", action="store_true", help="Scrape exercism.org/profiles/<user> instead of using manual values")
-    p.add_argument("--probe-api", action="store_true",
-                    help="Diagnostic mode: try candidate authenticated API endpoints with "
-                         "--token (or EXERCISM_TOKEN env var) and print what each returns. "
-                         "Writes nothing.")
-    p.add_argument("--token", default=None, help="Exercism personal API token, for --probe-api")
-    p.add_argument("--reputation", type=int, default=0)
-    p.add_argument("--solutions", type=int, default=0)
-    p.add_argument("--badges", type=int, default=0)
-    p.add_argument("--tracks", nargs="*", default=[])
+    p.add_argument("--repo", required=True, help="owner/repo where Exercism's GitHub Syncer pushes solutions, e.g. AurelieeF/exercism-solutions")
+    p.add_argument("--repo-path", default="solutions", help="Path inside the repo containing <track>/<exercise> folders (default: solutions)")
+    p.add_argument("--branch", default="main")
     p.add_argument("-o", "--output", default="exercism_stats.svg")
     p.add_argument(
         "--soft-fail",
         action="store_true",
-        help="In --live mode, if scraping fails, print a warning and exit 0 without touching "
+        help="If the repo can't be read, print a warning and exit 0 without touching "
              "the output file (so a CI job doesn't hard-fail / doesn't commit a broken SVG).",
     )
     args = p.parse_args()
 
-    if args.probe_api:
-        token = args.token or __import__("os").environ.get("EXERCISM_TOKEN")
-        if not token:
-            sys.exit("--probe-api needs a token: pass --token or set EXERCISM_TOKEN.")
-        probe_api(args.user, token)
-        return
+    try:
+        data = fetch_from_solutions_repo(args.repo, base_path=args.repo_path, branch=args.branch)
+    except FetchError as e:
+        if args.soft_fail:
+            print(f"::warning::Could not read {args.repo}, keeping previous SVG. {e}", file=sys.stderr)
+            return
+        sys.exit(str(e))
 
-    if args.live:
-        try:
-            data = scrape_live(args.user)
-        except ScrapeError as e:
-            if args.soft_fail:
-                print(f"::warning::Exercism scrape failed, keeping previous SVG. {e}", file=sys.stderr)
-                return
-            sys.exit(str(e))
-        display_name = args.display_name or data["display_name"]
-        reputation, solutions, badges, tracks = (
-            data["reputation"], data["solutions"], data["badges"], data["tracks"]
-        )
-    else:
-        display_name = args.display_name or args.user
-        reputation, solutions, badges, tracks = (
-            args.reputation, args.solutions, args.badges, args.tracks
-        )
-
-    svg = build_svg(display_name, args.user, reputation, solutions, badges, tracks)
+    display_name = args.display_name or args.user
+    svg = build_svg(display_name, args.user, data["total"], data["track_counts"], args.repo)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(svg)
-    print(f"Wrote {args.output}")
+    print(f"Wrote {args.output} — {data['total']} exercises across {len(data['track_counts'])} track(s)")
 
 
 if __name__ == "__main__":
