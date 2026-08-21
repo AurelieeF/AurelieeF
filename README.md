@@ -16,9 +16,11 @@
 ![C](https://img.shields.io/badge/c-ff2d95.svg?style=for-the-badge&logo=c&logoColor=white) ![Java](https://img.shields.io/badge/java-9b30ff.svg?style=for-the-badge&logo=openjdk&logoColor=white) ![JavaFX](https://img.shields.io/badge/javafx-ffd93d.svg?style=for-the-badge&logo=javafx&logoColor=150022) ![HTML5](https://img.shields.io/badge/html5-ff2d95.svg?style=for-the-badge&logo=html5&logoColor=white) ![NodeJS](https://img.shields.io/badge/node.js-9b30ff?style=for-the-badge&logo=node.js&logoColor=white) ![Python](https://img.shields.io/badge/python-ffd93d.svg?style=for-the-badge&logo=python&logoColor=150022) ![Electron.js](https://img.shields.io/badge/Electron-ff2d95?style=for-the-badge&logo=Electron&logoColor=white) ![Cisco](https://img.shields.io/badge/cisco-9b30ff.svg?style=for-the-badge&logo=cisco&logoColor=white) ![Windows Terminal](https://img.shields.io/badge/Windows%20Terminal-ffd93d.svg?style=for-the-badge&logo=windows-terminal&logoColor=150022) ![PowerShell](https://img.shields.io/badge/PowerShell-ff2d95.svg?style=for-the-badge&logo=powershell&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-9b30ff?style=for-the-badge&logo=postman&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-ffd93d.svg?style=for-the-badge&logo=mysql&logoColor=150022) ![JWT](https://img.shields.io/badge/JWT-ff2d95?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white) ![Unity](https://img.shields.io/badge/unity-9b30ff.svg?style=for-the-badge&logo=unity&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-ffd93d.svg?style=for-the-badge&logo=javascript&logoColor=150022) ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-ff2d95?style=for-the-badge&logo=Apache%20Maven&logoColor=white) ![SQLite](https://img.shields.io/badge/sqlite-9b30ff.svg?style=for-the-badge&logo=sqlite&logoColor=white) ![Sketch Up](https://img.shields.io/badge/SketchUp-ffd93d?style=for-the-badge&logo=sketchup&logoColor=150022) ![Notion](https://img.shields.io/badge/Notion-ff2d95.svg?style=for-the-badge&logo=notion&logoColor=white) ![PHP](https://img.shields.io/badge/php-9b30ff.svg?style=for-the-badge&logo=php&logoColor=white)
 #  🧠 LeetCode Stats:
 
-
-
-![LeetCode Stats](https://leetcard.jacoblin.cool/au_tryinh?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d)
+<p align="center">
+  <img width="480" src="https://leetcard.jacoblin.cool/au_tryinh?colors=0a0014,1a0033,ffffff,c084fc,ff2d95,9b30ff,ffd93d,ffd93d" alt="LeetCode Stats" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img width="380" src="./exercism_stats.svg" alt="Exercism Stats" />
+</p>
 
 
 <!--
