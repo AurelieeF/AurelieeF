@@ -25,6 +25,7 @@
       .stat-value    { font: 700 15px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }
       .hero-value    { font: 700 42px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }
       .hero-label    { font: 600 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c084fc; letter-spacing: 0.05em; }
+      .hero-sub      { font: 400 10.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c084fc; opacity: 0.75; }
       .footer        { font: 400 10.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c084fc; opacity: 0.8; }
     </style>
   </defs>
@@ -34,15 +35,17 @@
 
   <circle cx="108" cy="108" r="96" fill="url(#glow)" />
 
-  <!-- decorative ring framing the headline number (ornamental, not a % gauge) -->
+  <!-- ring fill = completed/available when the denominator is known; otherwise a
+       fixed decorative arc (never a fabricated percentage) -->
   <circle cx="108" cy="108" r="62" fill="none"
           stroke="#1a0033" stroke-width="9" opacity="0.6" />
   <circle cx="108" cy="108" r="62" fill="none"
           stroke="url(#ringGrad)" stroke-width="9" stroke-linecap="round"
           stroke-dasharray="335.0 389.6"
           transform="rotate(-90 108 108)" />
-  <text x="108" y="110" text-anchor="middle" class="hero-value">6</text>
-  <text x="108" y="132" text-anchor="middle" class="hero-label">EXERCISES</text>
+  <text x="108" y="104" text-anchor="middle" class="hero-value">6</text>
+  <text x="108" y="124" text-anchor="middle" class="hero-label">EXERCISES</text>
+  
 
   <text x="226" y="42" class="card-title">Exercism Stats</text>
   <text x="226" y="62" class="card-subtitle">Aurelie &#183; @AurelieeF</text>
