@@ -4,8 +4,8 @@
 
 <p align="left">
    
-  <img width="40" src="https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c" alt="Lofi" />
-  <img width="490" src="./FakeTerminal.svg" alt="terminal" />
+  <img width="400" src="https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c" alt="Lofi" />
+  <img width="400" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
