@@ -5,7 +5,7 @@
 <p align="left">
    
   <img width="501" src="https://github.com/user-attachments/assets/24162305-68e2-4070-ad6b-7558b8b59c4c" alt="Lofi" />
-  <img width="502" src="./FakeTerminal.svg" alt="terminal" />
+  <img width="501" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
