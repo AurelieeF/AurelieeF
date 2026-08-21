@@ -1,0 +1,75 @@
+<svg width="520" height="210" viewBox="0 0 520 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exercism stats for Aurelie: 5 solutions published, 5 reputation, 2 badges">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0014" />
+      <stop offset="100%" stop-color="#1a0033" />
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff2d95" />
+      <stop offset="50%" stop-color="#9b30ff" />
+      <stop offset="100%" stop-color="#ffd93d" />
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff2d95" />
+      <stop offset="50%" stop-color="#9b30ff" />
+      <stop offset="100%" stop-color="#ffd93d" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9b30ff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#9b30ff" stop-opacity="0" />
+    </radialGradient>
+    <style>
+      .card-title    { font: 700 21px 'Segoe UI', Ubuntu, Sans-Serif; fill: url(#titleGrad); }
+      .card-subtitle { font: 400 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c084fc; }
+      .stat-label    { font: 400 13.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; opacity: 0.92; }
+      .stat-value    { font: 700 15px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }
+      .hero-value    { font: 700 42px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }
+      .hero-label    { font: 600 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c084fc; letter-spacing: 0.05em; }
+      .footer        { font: 400 10.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c084fc; opacity: 0.8; }
+    </style>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="519" height="209" rx="18"
+        fill="url(#bg)" stroke="#9b30ff" stroke-opacity="0.5" />
+
+  <circle cx="108" cy="108" r="96" fill="url(#glow)" />
+
+  <!-- decorative ring framing the headline number (ornamental, not a % gauge) -->
+  <circle cx="108" cy="108" r="62" fill="none"
+          stroke="#1a0033" stroke-width="9" opacity="0.6" />
+  <circle cx="108" cy="108" r="62" fill="none"
+          stroke="url(#ringGrad)" stroke-width="9" stroke-linecap="round"
+          stroke-dasharray="335.0 389.6"
+          transform="rotate(-90 108 108)">
+    <animate attributeName="stroke-dasharray"
+      values="0 389.6; 335.0 389.6"
+      dur="1.1s" fill="freeze" />
+  </circle>
+  <text x="108" y="110" text-anchor="middle" class="hero-value">5</text>
+  <text x="108" y="132" text-anchor="middle" class="hero-label">SOLUTIONS</text>
+
+  <text x="226" y="42" class="card-title">Exercism Stats</text>
+  <text x="226" y="62" class="card-subtitle">Aurelie &#183; @AurelieeF</text>
+  <line x1="226" y1="90" x2="492" y2="90" stroke="#c084fc" stroke-opacity="0.22" stroke-width="1" />
+
+      <g transform="translate(226, 105)">
+        <path d="M12 2l2.6 6.6L21 9.2l-5 4.6 1.4 6.9L12 17.3 6.6 20.7 8 13.8 3 9.2l6.4-.6z" transform="scale(0.6)" fill="none" stroke="#ff2d95"
+              stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
+      </g>
+      <text x="250" y="118" class="stat-label">Reputation</text>
+      <text x="492" y="118" class="stat-value" text-anchor="end">5</text>
+      <g transform="translate(226, 137)">
+        <path d="M8.5 2h7l-1.8 5.4a6.5 6.5 0 1 1 -3.4 0z M12 12.4a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2z" transform="scale(0.6)" fill="none" stroke="#ffd93d"
+              stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
+      </g>
+      <text x="250" y="150" class="stat-label">Badges collected</text>
+      <text x="492" y="150" class="stat-value" text-anchor="end">2</text>
+      <g transform="translate(226, 169)">
+        <path d="M12 3l9 4.5-9 4.5-9-4.5z M3 12l9 4.5 9-4.5 M3 16.5l9 4.5 9-4.5" transform="scale(0.6)" fill="none" stroke="#9b30ff"
+              stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.95" />
+      </g>
+      <text x="250" y="182" class="stat-label">Tracks</text>
+      <text x="492" y="182" class="stat-value" text-anchor="end">Python</text>
+
+  <text x="28" y="194" class="footer">exercism.org/profiles/AurelieeF</text>
+</svg>
