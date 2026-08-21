@@ -5,7 +5,7 @@
 <p align="left">
    <img width="500" src="./dog1 (1).gif" alt="Doggy study" />
 
-  <img width="300" src="./FakeTerminal.svg" alt="terminal" />
+  <img width="350" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
 # 💫 About Me:
