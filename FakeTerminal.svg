@@ -14,10 +14,47 @@
     <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
       <rect width="4" height="2" fill="#000000" opacity="0.05"/>
     </pattern>
+    <clipPath id="cardClip">
+      <rect width="520" height="330" rx="10"/>
+    </clipPath>
+    <style>
+      .rain { animation-name: fall; animation-timing-function: linear; animation-iteration-count: infinite; }
+      @keyframes fall {
+        0%   { transform: translateY(-60px); opacity: 0; }
+        8%   { opacity: 1; }
+        85%  { opacity: 1; }
+        100% { transform: translateY(360px); opacity: 0; }
+      }
+      .cursor { animation: blink 1s steps(1) infinite; }
+      @keyframes blink {
+        0%, 49%  { opacity: 1; }
+        50%, 100% { opacity: 0; }
+      }
+    </style>
   </defs>
 
   <!-- base -->
   <rect width="520" height="330" rx="10" fill="url(#bgGrad)"/>
+
+  <!-- fake hacking movement, super transparent, sits behind everything -->
+  <g clip-path="url(#cardClip)" opacity="0.10" font-family="'SF Mono', Consolas, Menlo, monospace" font-size="12">
+    <text class="rain" x="46"  y="0" fill="#ff2d95" style="animation-duration:9s; animation-delay:-1s;">0<tspan x="46" dy="15">1</tspan><tspan x="46" dy="15">0</tspan><tspan x="46" dy="15">0</tspan><tspan x="46" dy="15">1</tspan><tspan x="46" dy="15">1</tspan></text>
+    <text class="rain" x="92"  y="0" fill="#9b30ff" style="animation-duration:12s; animation-delay:-4s;">1<tspan x="92" dy="15">1</tspan><tspan x="92" dy="15">0</tspan><tspan x="92" dy="15">1</tspan><tspan x="92" dy="15">0</tspan><tspan x="92" dy="15">0</tspan></text>
+    <text class="rain" x="138" y="0" fill="#ffd93d" style="animation-duration:7s;  animation-delay:-2s;">0<tspan x="138" dy="15">0</tspan><tspan x="138" dy="15">1</tspan><tspan x="138" dy="15">0</tspan><tspan x="138" dy="15">1</tspan><tspan x="138" dy="15">0</tspan></text>
+    <text class="rain" x="184" y="0" fill="#c9a6ff" style="animation-duration:10s; animation-delay:-6s;">1<tspan x="184" dy="15">0</tspan><tspan x="184" dy="15">0</tspan><tspan x="184" dy="15">1</tspan><tspan x="184" dy="15">1</tspan><tspan x="184" dy="15">0</tspan></text>
+    <text class="rain" x="230" y="0" fill="#ff2d95" style="animation-duration:8s;  animation-delay:-3s;">0<tspan x="230" dy="15">1</tspan><tspan x="230" dy="15">1</tspan><tspan x="230" dy="15">0</tspan><tspan x="230" dy="15">0</tspan><tspan x="230" dy="15">1</tspan></text>
+    <text class="rain" x="276" y="0" fill="#9b30ff" style="animation-duration:11s; animation-delay:-7s;">1<tspan x="276" dy="15">0</tspan><tspan x="276" dy="15">1</tspan><tspan x="276" dy="15">1</tspan><tspan x="276" dy="15">0</tspan><tspan x="276" dy="15">0</tspan></text>
+    <text class="rain" x="322" y="0" fill="#ffd93d" style="animation-duration:9.5s;animation-delay:-5s;">0<tspan x="322" dy="15">0</tspan><tspan x="322" dy="15">1</tspan><tspan x="322" dy="15">1</tspan><tspan x="322" dy="15">0</tspan><tspan x="322" dy="15">1</tspan></text>
+    <text class="rain" x="368" y="0" fill="#c9a6ff" style="animation-duration:7.5s;animation-delay:-1.5s;">1<tspan x="368" dy="15">1</tspan><tspan x="368" dy="15">0</tspan><tspan x="368" dy="15">0</tspan><tspan x="368" dy="15">1</tspan><tspan x="368" dy="15">0</tspan></text>
+    <text class="rain" x="414" y="0" fill="#ff2d95" style="animation-duration:10.5s;animation-delay:-8s;">0<tspan x="414" dy="15">1</tspan><tspan x="414" dy="15">0</tspan><tspan x="414" dy="15">1</tspan><tspan x="414" dy="15">1</tspan><tspan x="414" dy="15">0</tspan></text>
+    <text class="rain" x="460" y="0" fill="#9b30ff" style="animation-duration:8.5s;animation-delay:-4.5s;">1<tspan x="460" dy="15">0</tspan><tspan x="460" dy="15">0</tspan><tspan x="460" dy="15">1</tspan><tspan x="460" dy="15">0</tspan><tspan x="460" dy="15">1</tspan></text>
+    <text class="rain" x="23"  y="0" fill="#ffd93d" style="animation-duration:7.8s; animation-delay:-2.6s;">1<tspan x="23" dy="15">0</tspan><tspan x="23" dy="15">1</tspan><tspan x="23" dy="15">0</tspan><tspan x="23" dy="15">0</tspan><tspan x="23" dy="15">1</tspan></text>
+    <text class="rain" x="69"  y="0" fill="#c9a6ff" style="animation-duration:8.9s; animation-delay:-5.2s;">0<tspan x="69" dy="15">1</tspan><tspan x="69" dy="15">1</tspan><tspan x="69" dy="15">0</tspan><tspan x="69" dy="15">1</tspan><tspan x="69" dy="15">0</tspan></text>
+    <text class="rain" x="161" y="0" fill="#ff2d95" style="animation-duration:6.7s; animation-delay:-1.2s;">1<tspan x="161" dy="15">1</tspan><tspan x="161" dy="15">0</tspan><tspan x="161" dy="15">0</tspan><tspan x="161" dy="15">1</tspan><tspan x="161" dy="15">0</tspan></text>
+    <text class="rain" x="253" y="0" fill="#9b30ff" style="animation-duration:9.1s; animation-delay:-6.4s;">0<tspan x="253" dy="15">0</tspan><tspan x="253" dy="15">1</tspan><tspan x="253" dy="15">1</tspan><tspan x="253" dy="15">0</tspan><tspan x="253" dy="15">0</tspan></text>
+    <text class="rain" x="391" y="0" fill="#ffd93d" style="animation-duration:7.2s; animation-delay:-3.8s;">1<tspan x="391" dy="15">0</tspan><tspan x="391" dy="15">0</tspan><tspan x="391" dy="15">1</tspan><tspan x="391" dy="15">1</tspan><tspan x="391" dy="15">0</tspan></text>
+  </g>
+
   <rect width="520" height="330" rx="10" fill="url(#scanlines)"/>
   <rect x="1" y="1" width="518" height="328" rx="10" fill="none" stroke="#9b30ff" stroke-width="1.2" opacity="0.45"/>
 
@@ -31,6 +68,7 @@
   <circle cx="38" cy="16" r="5" fill="#9b30ff"/>
   <circle cx="56" cy="16" r="5" fill="#ffd93d"/>
   <text x="80" y="20" font-family="'SF Mono', Consolas, Menlo, monospace" font-size="12" fill="#8a7aa8">aurelie@dev:~/trajectory</text>
+  <rect class="cursor" x="257" y="9" width="7" height="13" fill="#ffd93d"/>
 
   <!-- current focus block -->
   <text x="24" y="58" font-family="'SF Mono', Consolas, Menlo, monospace" font-size="13" fill="#c9a6ff">$ <tspan fill="#ffffff">./current_focus.sh</tspan></text>
