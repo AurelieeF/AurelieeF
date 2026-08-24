@@ -9,7 +9,10 @@
 </p>
 
 # 💫 About Me:
-💻 Software Engineering student building practical mini-apps and more<br>🧩 I enjoy turning ideas into clean, working systems.<br>⚙️ I work across front-end, back-end, APIs, and databases.<br>🎨 I draw and transform sketches into interactive apps.<br>🎮 Exploring coding thing step by step.
+💻 Software Engineering student building practical mini-apps and more<br>
+🧩 I enjoy turning ideas into clean, working systems.<br>⚙️ I work across front-end, back-end, APIs, and databases.
+<br>🎨 I draw and transform sketches into interactive apps.<br>🎮 Exploring coding thing step by step.
+
 
 
 # 💻 Tech Stack:
