@@ -9,8 +9,10 @@
 </p>
 
 # 💫 About Me:
+Focusing more on Python now...<br>
 💻 Software Engineering student building practical mini-apps and more<br>
-🧩 I enjoy turning ideas into clean, working systems.<br>⚙️ I work across front-end, back-end, APIs, and databases.
+🧩 I enjoy turning ideas into clean, working systems.
+<br>⚙️ I work across front-end, back-end, APIs, and databases.
 <br>🎨 I draw and transform sketches into interactive apps.<br>🎮 Exploring coding thing step by step.
 
 
