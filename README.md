@@ -8,12 +8,16 @@
   <img width="380" src="./FakeTerminal.svg" alt="terminal" />
 </p>
 
-# 💫 About Me:
-Focusing more on Python now...<br>
-💻 Software Engineering student building practical mini-apps and more<br>
-🧩 I enjoy turning ideas into clean, working systems.
-<br>⚙️ I work across front-end, back-end, APIs, and databases.
-<br>🎨 I draw and transform sketches into interactive apps.<br>🎮 Exploring coding thing step by step.
+## About Me
+
+Software engineering student who likes turning ideas into working systems, currently deep in Python.
+
+* Building across front-end, back-end, APIs, and databases
+* Sketch-first, a lot of my ideas start on paper before becoming code
+* Working with <strong><code>Python</code></strong>, Java, C, and TypeScript
+* Interested in AI, robotics, and data-driven applications
+* Learning in public and documenting what I build along the way
+
 
 
 
