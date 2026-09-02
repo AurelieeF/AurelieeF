@@ -51,7 +51,7 @@
     <line x1="240" y1="300" x2="171.2" y2="201.7" stroke="#ffd93d"
       stroke-width="2" opacity="0.55" filter="url(#neonGlow)"/>
     <text x="240" y="294" text-anchor="middle" font-family="Consolas, monospace"
-      font-weight="bold" font-size="46" fill="#ffffff" filter="url(#neonGlow)">13</text>
+      font-weight="bold" font-size="46" fill="#ffffff" filter="url(#neonGlow)">0</text>
     <text x="240" y="326" text-anchor="middle" font-family="Consolas, monospace"
       font-size="13" letter-spacing="3" fill="#ffd93d">DAY STREAK</text>
     <text x="240" y="124" text-anchor="middle" font-family="Consolas, monospace"
@@ -81,10 +81,10 @@
     <text x="520" y="308" font-family="Consolas, monospace" font-size="14" fill="#ffd93d"
       letter-spacing="1">FOLLOWERS</text>
     <text x="850" y="308" font-family="Consolas, monospace" font-size="15" fill="#ffffff"
-      text-anchor="end" filter="url(#neonGlow)">13</text>
+      text-anchor="end" filter="url(#neonGlow)">12</text>
     <line x1="520" y1="320" x2="850" y2="320" stroke="#ff2d95"
       stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
 
   <text x="30" y="500" font-family="Consolas, monospace" font-size="12" fill="#b892ff">&gt; SYSTEM STATUS: ONLINE_</text>
-  <text x="870" y="500" font-family="Consolas, monospace" font-size="12" fill="#b892ff" text-anchor="end">LAST SYNC: 2026-09-01</text>
+  <text x="870" y="500" font-family="Consolas, monospace" font-size="12" fill="#b892ff" text-anchor="end">LAST SYNC: 2026-09-02</text>
 </svg>
